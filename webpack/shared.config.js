@@ -13,7 +13,6 @@ exports.sharedOptions = {
 
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
-
     alias: {
       '~': resolve(),
     },
@@ -34,6 +33,5 @@ exports.sharedOptions = {
       },
     ],
   },
-
   plugins: [new SimpleProgressWebpackPlugin({ format: 'minimal' })],
 }

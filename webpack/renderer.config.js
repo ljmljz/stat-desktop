@@ -82,7 +82,6 @@ module.exports = {
       },
     ].filter(Boolean),
   },
-
   plugins: [
     ...sharedOptions.plugins,
 

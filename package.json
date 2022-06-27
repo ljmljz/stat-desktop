@@ -1,5 +1,5 @@
 {
-  "displayName": "My Awesome Electron App",
+  "displayName": "防疫统计App",
   "name": "my-awesome-electron-app",
   "description": "Your awesome app description",
   "version": "1.2.1",
@@ -7,7 +7,7 @@
   "devTempBuildFolder": "./node_modules/.dev-temp-build",
   "devServer": "http://localhost:4927",
   "author": {
-    "name": "Dalton Menezes",
+    "name": "Jimmy Li",
     "email": "daltonmenezes@outlook.com"
   },
   "license": "MIT",
@@ -35,6 +35,13 @@
     "r": "yarn run-s"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.8",
+    "antd": "^4.21.3",
+    "dexie": "^3.2.2",
+    "dexie-react-hooks": "^1.1.1",
+    "exceljs": "^4.3.0",
+    "fs": "^0.0.1-security",
+    "path-browserify": "^1.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.1"

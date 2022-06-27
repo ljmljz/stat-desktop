@@ -8,9 +8,9 @@ import { PLATFORM, ENVIRONMENT } from 'shared/constants'
 
 export async function makeAppSetup(createWindow: () => Promise<BrowserWindow>) {
   if (ENVIRONMENT.IS_DEV) {
-    await installExtension(REACT_DEVELOPER_TOOLS, {
-      forceDownload: false,
-    })
+    // await installExtension(REACT_DEVELOPER_TOOLS, {
+    //   forceDownload: false,
+    // })
   }
 
   let window = await createWindow()

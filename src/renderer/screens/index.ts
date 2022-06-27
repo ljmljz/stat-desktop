@@ -1,3 +1,6 @@
 export * from './Another'
 export * from './About'
 export * from './Main'
+export * from './AllStudents'
+export * from './OutSchool'
+export * from './InSchool'

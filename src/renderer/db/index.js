@@ -33,5 +33,5 @@ db.version(1).stores({
   outschool:
     '++id, studentId, address, inCity, inProvince, outProvince, graduating, note',
   outshenzhen:
-    '++id, studentId, studentNumber, liveAddress, health, testResult, testTime, leaveTime, returnTime, owner, ownerPhone, counsellor, counsellorPhone, note',
+    '++id, studentId, studentNumber, liveAddress, health, testResult, reportDate, testTime, leaveTime, returnTime, owner, ownerPhone, counsellor, counsellorPhone, note',
 })

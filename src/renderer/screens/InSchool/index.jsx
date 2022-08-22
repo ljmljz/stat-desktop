@@ -115,7 +115,7 @@ const LeaveSchoolForm = ({ visible, onOk, onCancel }) => {
           label="校外地址"
           rules={[{ required: true, message: '校外地址必填' }]}
         >
-          <Input onBlur={handleAddressChange} />
+          <Input onChange={handleAddressChange} />
         </Form.Item>
         {outOfShenzhen ? (
           <div>
@@ -124,6 +124,13 @@ const LeaveSchoolForm = ({ visible, onOk, onCancel }) => {
                 校外地址为深圳外，需要补充额外信息
               </span>
             </div>
+            <Form.Item
+              name="studentNumber"
+              label="学生学号"
+              rules={[{ required: true, message: '学号必填' }]}
+            >
+              <Input />
+            </Form.Item>
             <Form.Item
               name="health"
               label="健康状况"
@@ -251,7 +258,7 @@ export const InSchool = (props) => {
     try {
       const identifies = rows.map((e) => e['identify'])
 
-      await db.outschool.clear()
+      await db.inschool.clear()
       console.log('out school cleared')
 
       let students = await db.allstudents
@@ -266,7 +273,7 @@ export const InSchool = (props) => {
         d['studentId'] = d['id']
         d['key'] = d['id']
 
-        db.outschool.add({
+        db.inschool.add({
           studentId: d['studentId'],
           retrunData: d['returnData'],
           liveInSchool: d['liveInSchool'],
@@ -345,38 +352,55 @@ export const InSchool = (props) => {
 
   const handleModalOk = (values) => {
     const currentYear = new Date().getFullYear()
+    try {
+      (async () => {
+        const studentInfo = data.find((e) => e.key === selectedRowKeys[0])
+        await db.outschool.add({
+          studentId: studentInfo['studentId'],
+          address: values['address'],
+          note: values['note'],
+          inCity: values['address'].indexOf('深圳') >= 0,
+          inProvince:
+            values['address'].indexOf('深圳') < 0 &&
+            values['address'].indexOf('广东') >= 0,
+          outProvince:
+            values['address'].indexOf('深圳') < 0 &&
+            values['address'].indexOf('广东') < 0,
+          graduating:
+            currentYear - 2000 - parseInt(studentInfo['class'], 10) >= 3,
+        })
 
-    // 深圳内
-    if (values['address'].indexOf('深圳') >= 0) {
-      try {
-        ;(async () => {
-          const studentInfo = data.find((e) => e.key === selectedRowKeys[0])
-          await db.outschool.add({
+        await db.inschool
+          .where('studentId')
+          .equals(studentInfo.studentId)
+          .delete()
+        message.success('学生离校操作成功，数据更新到未返校表中')
+
+        // 学生离深
+        if (values['address'].indexOf('深圳') < 0) {
+          await db.outshenzhen.add({
             studentId: studentInfo['studentId'],
-            address: values['address'],
-            note: values['note'],
-            inCity: values['address'].indexOf('深圳') >= 0,
-            inProvince:
-              values['address'].indexOf('深圳') < 0 &&
-              values['address'].indexOf('广东') >= 0,
-            outProvince:
-              values['address'].indexOf('深圳') < 0 &&
-              values['address'].indexOf('广东') < 0,
-            graduating:
-              currentYear - 2000 - parseInt(studentInfo['class'], 10) >= 3,
+            studentNumber: values['studentNumber'],
+            health: values['health'],
+            testResult: values['testResult'],
+            testTime: values['testTime'].format('YYYYMMDD'),
+            reportDate: moment().format('YYYYMMDD'),
+            leaveTime: values['leaveTime'].format('YYYYMMDD'),
+            returnTime: values['returnTime'].format('YYYYMMDD'),
+            owner: values['owner'],
+            ownerPhone: values['ownerPhone'],
+            liveAddress: values['address'],
+            counsellor: values['counsellor'],
+            counsellorPhone: values['counsellorPhone'],
+            note: values['note']
           })
+        }
 
-          await db.inschool
-            .where('studentId')
-            .equals(studentInfo.studentId)
-            .delete()
-          message.success('学生离校操作成功，目的地为深圳市内')
-
-          setData([...data.filter((e) => e.key !== selectedRowKeys[0])])
-        })()
-      } catch (err) {
-        console.warn(err)
-      }
+        message.success('学生离开深，数据增加到今日离深名单中')
+        setData([...data.filter((e) => e.key !== selectedRowKeys[0])])
+      })()
+    } catch(err) {
+      console.warn(err)
     }
 
     setVisible(false)

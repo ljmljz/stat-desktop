@@ -142,7 +142,7 @@ export const AllStudents = (props) => {
                 <div>
                     <input type="file" id="btn-file" style={{ display: 'none' }} onChange={handleImport} />
                     <Button type="primary" onClick={openImportDialog}>导入</Button>
-                    <Search placeholder="input search text" onSearch={handleSearch} enterButton style={{ width: 200, marginLeft: 10 }} />
+                    <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200, marginLeft: 10 }} />
                 </div>
                 <Table columns={columns} dataSource={data} />
             </Card>
